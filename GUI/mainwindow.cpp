@@ -1,14 +1,5 @@
 #include "mainwindow.h"
 
-
-struct SensorData {
-    float optical_density;
-    float temperature;
-    float dissolved_oxygen;
-    float ph;
-    float airflow;
-};
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -74,23 +65,54 @@ void MainWindow::closePort()
 // Called when data is available to be read from the Arduino
 void MainWindow::readData()
 {
-    int length;
-    QString data;
+    char c;
 
-    length = port_->read(1).toInt();
-    data = port_->read(length);
-    lcd_temp_->setText(data);
+    if (!port_->canReadLine())
+        return;
+    port_->getChar(&c);
+    BCommunication::PacketType packet_type = (BCommunication::PacketType) c;
+    QString data = port_->readLine();
+    data.chop(1);
+
+    switch(packet_type) {
+      case BCommunication::Config:
+
+        break;
+      case BCommunication::OD:
+        lcd_od_->setText(data);
+        break;
+      case BCommunication::DO:
+        lcd_do_->setText(data);
+        break;
+      case BCommunication::Temperature:
+        lcd_temp_->setText(data);
+        break;
+      case BCommunication::Air:
+
+        break;
+      case BCommunication::pH:
+        lcd_ph_->setText(data);
+        break;
+      default:
+
+        break;
+    }
 }
 
 // Sends a packet to the Arduino requesting a reading from all sensors
 void MainWindow::requestData()
 {
-    port_->write("1");
+    //port_->putChar(BCommunication::Air);
+    port_->putChar(BCommunication::DO);
+    port_->putChar(BCommunication::OD);
+    port_->putChar(BCommunication::pH);
+    port_->putChar(BCommunication::Temperature);
     port_->waitForReadyRead(0);
+
 }
 
 // Overloaded function. Requests data of a particular type
-void MainWindow::requestData(PacketType packet_type)
+void MainWindow::requestData(BCommunication::PacketType packet_type)
 {
 
 }

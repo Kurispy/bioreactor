@@ -9,6 +9,7 @@ public:
     float getOD();
     void calibrate();
 private:
+    int is_calibrated_;
     int photodiode_pin_;
     int led_pin_;
     int zero_reading_;

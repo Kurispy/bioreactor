@@ -1,12 +1,18 @@
 #include "Arduino.h"
 #include "OpticalDensity.h"
 
-ODSensor::ODSensor(int photodiode_pin, int led_pin) : photodiode_pin_(photodiode_pin), led_pin_(led_pin) {
+ODSensor::ODSensor(int photodiode_pin, int led_pin) :
+photodiode_pin_(photodiode_pin),
+led_pin_(led_pin),
+is_calibrated_(0) 
+{
     pinMode(photodiode_pin_, INPUT);
     pinMode(led_pin_, OUTPUT);
 }
 
 float ODSensor::getOD() {
+    if (!is_calibrated_)
+      return 0;
     int lightOnAvg, lightOffAvg, reading, sum;
     for (int i = 0; i < 5; i++) {
         sum = 0;

@@ -2,8 +2,10 @@
 #include "OpticalDensity.h"
 #include "Communication.h"
 
-TemperatureSensor temp_sen(A1);
-Thermoresistor thermres(9);
+TemperatureSensor *temp_sen = new TemperatureSensor(A1);
+Thermoresistor *thermres = new Thermoresistor(9);
+ODSensor *od_sen = new ODSensor(A2, 10);
+
 
 void setup() {
   Serial.begin(9600);
@@ -18,26 +20,40 @@ void loop() {
 void serialEvent() {
   // This will need to be changed to Serial.parseInt() if there are
   // ever more than 9 packet types. This method is faster though
-  PacketType packet_type = (PacketType) (Serial.read() - '0');
+  BCommunication::PacketType packet_type = (BCommunication::PacketType) (Serial.read());
   
+  // Data is sent as chars and not bytes due to the way Qt reads
+  // from serial ports. This might be changed if it becomes an issue
   switch(packet_type) {
-    case config:
+    case BCommunication::Config:
       
       break;
-    case od:
+    case BCommunication::OD:
+      Serial.write(BCommunication::OD);
+      Serial.print(od_sen->getOD());
+      Serial.write('\n');
+      Serial.flush();
+      break;
+    case BCommunication::DO:
+      Serial.write(BCommunication::DO);
+      Serial.print(345.096);
+      Serial.write('\n');
+      Serial.flush();
+      break;
+    case BCommunication::Temperature:
+      Serial.write(BCommunication::Temperature);
+      Serial.print(temp_sen->getTemperature());
+      Serial.write('\n');
+      Serial.flush();
+      break;
+    case BCommunication::Air:
       
       break;
-    case dox:
-      
-      break;
-    case temp:
-      
-      break;
-    case air:
-      
-      break;
-    case ph:
-      
+    case BCommunication::pH:
+      Serial.write(BCommunication::pH);
+      Serial.print(3452.3564);
+      Serial.write('\n');
+      Serial.flush();
       break;
     default:
     

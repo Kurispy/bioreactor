@@ -1,13 +1,15 @@
 #ifndef COMMUNICATION_H
 #define	COMMUNICATION_H
 
-enum PacketType {
-    config,
-    od,
-    temp,
-    dox,
-    ph,
-    air
-};
+namespace BCommunication {
+    enum PacketType {
+        Config = '0',
+        OD,
+        Temperature,
+        DO,
+        pH,
+        Air
+    };
+}
 
 #endif	/* COMMUNICATION_H */

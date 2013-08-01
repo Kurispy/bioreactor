@@ -18,7 +18,7 @@ public:
 public slots:
     void readData();
     void requestData();
-    void requestData(PacketType packet_type);
+    void requestData(BCommunication::PacketType packet_type);
     void beginTestCycle(int chamber);
 
 private:
