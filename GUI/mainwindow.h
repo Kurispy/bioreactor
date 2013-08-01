@@ -7,12 +7,12 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include "Communication.h"
 
-class MainWindow : public QMainWindow
+class MainWindow : public QWidget
 {
     Q_OBJECT
-    
+
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow();
     ~MainWindow();
 
 public slots:
@@ -27,7 +27,6 @@ private:
     void closePort();
     QLabel *lcd_temp_, *lcd_od_, *lcd_do_, *lcd_ph_;
     QLabel *temp_, *od_, *do_, *ph_;
-    QGroupBox *overview_;
     QGridLayout *grid_layout_;
     QSerialPort *port_;
 };

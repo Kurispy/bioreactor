@@ -18,9 +18,8 @@ void loop() {
 
 // Run whenever serial data is available to be read
 void serialEvent() {
-  // This will need to be changed to Serial.parseInt() if there are
-  // ever more than 9 packet types. This method is faster though
-  BCommunication::PacketType packet_type = (BCommunication::PacketType) (Serial.read());
+  BCommunication::PacketType packet_type = 
+    (BCommunication::PacketType) (Serial.read());
   
   // Data is sent as chars and not bytes due to the way Qt reads
   // from serial ports. This might be changed if it becomes an issue
@@ -36,7 +35,7 @@ void serialEvent() {
       break;
     case BCommunication::DO:
       Serial.write(BCommunication::DO);
-      Serial.print(345.096);
+      Serial.print(12345);
       Serial.write('\n');
       Serial.flush();
       break;
@@ -51,7 +50,7 @@ void serialEvent() {
       break;
     case BCommunication::pH:
       Serial.write(BCommunication::pH);
-      Serial.print(3452.3564);
+      Serial.print(12345);
       Serial.write('\n');
       Serial.flush();
       break;

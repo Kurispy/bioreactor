@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+MainWindow::MainWindow()
 {
     initWindow();
 
@@ -21,7 +20,6 @@ MainWindow::~MainWindow()
 void MainWindow::initWindow()
 {
     lcd_temp_ = new QLabel("0");
-    lcd_temp_->setTextFormat(Qt::PlainText);
     lcd_od_ = new QLabel("0");
     lcd_do_ = new QLabel("0");
     lcd_ph_ = new QLabel("0");
@@ -30,7 +28,6 @@ void MainWindow::initWindow()
     do_ = new QLabel("DO");
     ph_ = new QLabel("pH");
     grid_layout_ = new QGridLayout();
-    overview_ = new QGroupBox(this);
     grid_layout_->addWidget(temp_, 0, 0);
     grid_layout_->addWidget(od_, 0, 1);
     grid_layout_->addWidget(do_, 2, 0);
@@ -39,8 +36,7 @@ void MainWindow::initWindow()
     grid_layout_->addWidget(lcd_od_, 1, 1);
     grid_layout_->addWidget(lcd_do_, 3, 0);
     grid_layout_->addWidget(lcd_ph_, 3, 1);
-    overview_->setLayout(grid_layout_);
-    setCentralWidget(overview_);
+    setLayout(grid_layout_);
     setWindowTitle("GUI");
 }
 
@@ -63,6 +59,7 @@ void MainWindow::closePort()
 }
 
 // Called when data is available to be read from the Arduino
+// TODO: move to a non-GUI thread
 void MainWindow::readData()
 {
     char c;
@@ -102,24 +99,23 @@ void MainWindow::readData()
 // Sends a packet to the Arduino requesting a reading from all sensors
 void MainWindow::requestData()
 {
-    //port_->putChar(BCommunication::Air);
+    port_->putChar(BCommunication::Air);
     port_->putChar(BCommunication::DO);
     port_->putChar(BCommunication::OD);
     port_->putChar(BCommunication::pH);
     port_->putChar(BCommunication::Temperature);
-    port_->waitForReadyRead(0);
-
 }
 
 // Overloaded function. Requests data of a particular type
 void MainWindow::requestData(BCommunication::PacketType packet_type)
 {
-
+    port_->putChar(packet_type);
 }
 
 // Sends a packet to the Arduino requesting the test cycle to begin for a
 // particular chamber
 void MainWindow::beginTestCycle(int chamber)
 {
-
+    port_->putChar(BCommunication::TestRequest);
+    port_->putChar(chamber);
 }

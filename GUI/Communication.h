@@ -3,12 +3,13 @@
 
 namespace BCommunication {
     enum PacketType {
-        Config = '0',
+        Config,
         OD,
         Temperature,
         DO,
         pH,
-        Air
+        Air,
+        TestRequest
     };
 }
 
