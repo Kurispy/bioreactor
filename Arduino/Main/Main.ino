@@ -19,20 +19,25 @@ void loop() {
 // Run whenever serial data is available to be read
 void serialEvent() {
   BCommunication::PacketType packet_type = 
-    (BCommunication::PacketType) (Serial.read());
+    (BCommunication::PacketType) Serial.read();
   
   // Data is sent as chars and not bytes due to the way Qt reads
   // from serial ports. This might be changed if it becomes an issue
   switch(packet_type) {
     case BCommunication::Config: {
-      // This could be dangerous
-      while(Serial.available() == 0);
+      // This could be dangerous. Should be changed to timeout
+      while(!Serial.available() == 0);
       BCommunication::ConfigType config_type = 
-        (BCommunication::ConfigType) (Serial.read());
+        (BCommunication::ConfigType) Serial.read();
         
       switch(config_type) {
         case BCommunication::CalibrateOD:
           od_sen->calibrate();
+          break;
+        case BCommunication::SetTemperature:
+          while(!Serial.available());
+          unsigned char pulse_width = Serial.read();
+          thermres->setPulseWidth((int) pulse_width);
           break;
       }
       break;

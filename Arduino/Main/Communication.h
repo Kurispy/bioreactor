@@ -13,7 +13,8 @@ namespace BCommunication {
     };
     
     enum ConfigType {
-        CalibrateOD
+        CalibrateOD,
+        SetTemperature
     };
 }
 
