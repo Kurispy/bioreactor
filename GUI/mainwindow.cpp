@@ -20,10 +20,10 @@ MainWindow::~MainWindow()
 // Initializes all GUI elements of the program
 void MainWindow::initWindow()
 {
-    lcd_temp_ = new QLabel("0");
-    lcd_od_ = new QLabel("0");
-    lcd_do_ = new QLabel("0");
-    lcd_ph_ = new QLabel("0");
+    temp_display_ = new QLabel("0");
+    od_display_ = new QLabel("0");
+    do_display_ = new QLabel("0");
+    ph_display_ = new QLabel("0");
     temp_ = new QLabel("Temperature");
     od_ = new QLabel("OD");
     do_ = new QLabel("DO");
@@ -34,10 +34,10 @@ void MainWindow::initWindow()
     grid_layout_->addWidget(od_, 0, 1);
     grid_layout_->addWidget(do_, 2, 0);
     grid_layout_->addWidget(ph_, 2, 1);
-    grid_layout_->addWidget(lcd_temp_, 1, 0);
-    grid_layout_->addWidget(lcd_od_, 1, 1);
-    grid_layout_->addWidget(lcd_do_, 3, 0);
-    grid_layout_->addWidget(lcd_ph_, 3, 1);
+    grid_layout_->addWidget(temp_display_, 1, 0);
+    grid_layout_->addWidget(od_display_, 1, 1);
+    grid_layout_->addWidget(do_display_, 3, 0);
+    grid_layout_->addWidget(ph_display_, 3, 1);
     grid_layout_->addWidget(calibrate_od_button_, 1, 2);
     setLayout(grid_layout_);
     setWindowTitle("GUI");
@@ -84,19 +84,19 @@ void MainWindow::readData()
 
         break;
       case BCommunication::OD:
-        lcd_od_->setText(data);
+        od_display_->setText(data);
         break;
       case BCommunication::DO:
-        lcd_do_->setText(data);
+        do_display_->setText(data);
         break;
       case BCommunication::Temperature:
-        lcd_temp_->setText(data);
+        temp_display_->setText(data);
         break;
       case BCommunication::Air:
 
         break;
       case BCommunication::pH:
-        lcd_ph_->setText(data);
+        ph_display_->setText(data);
         break;
       default:
 
@@ -120,9 +120,19 @@ void MainWindow::requestData(BCommunication::PacketType packet_type)
     port_->putChar(packet_type);
 }
 
+// Requests the Arduino to zero the OD
 void MainWindow::calibrateOD() {
     port_->clear();
     configure(BCommunication::CalibrateOD);
+}
+
+// Send a pulse width for the thermoresistor to the Arduino, based on temperature
+void MainWindow::setTemperature(float temperature) {
+    unsigned char pulse_width;
+    // Convert temperature to pulse width here
+    pulse_width = floor(temperature);
+    configure(BCommunication::SetTemperature);
+    port_->putChar(pulse_width);
 }
 
 // Sends a packet to the Arduino requesting the test cycle to begin for a
