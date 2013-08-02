@@ -18,20 +18,18 @@ float ODSensor::getOD() {
         sum = 0;
         for (int j = 0; j < 30; j++) {
             sum += analogRead(photodiode_pin_);
-            delay(10);
         }
         lightOffAvg = sum / 30;
         digitalWrite(led_pin_, HIGH); //Turn LED on
-        delayMicroseconds(1);
+        delay(1);
         sum = 0;
         for (int j = 0; j < 30; j++) {
             sum += analogRead(photodiode_pin_);
-            delay(10);
         }
         lightOnAvg = sum / 30;
         reading += lightOnAvg - lightOffAvg;
         digitalWrite(led_pin_, LOW); //Turn LED off
-        delay(10);
+        delay(1);
   }
   reading /= 5;
   return 32.399 * (-log10(float(reading) / float(zero_reading_)));
@@ -46,20 +44,18 @@ void ODSensor::calibrate() {
         sum = 0;
         for (int j = 0; j < 30; j++) {
             sum += analogRead(photodiode_pin_);
-            delay(10);
         }
         lightOffAvg = sum / 30;
         digitalWrite(led_pin_, HIGH); //Turn LED on
-        delayMicroseconds(1);
+        delay(2);
         sum = 0;
         for (int j = 0; j < 30; j++) {
             sum += analogRead(photodiode_pin_);
-            delay(10);
         }
         lightOnAvg = sum / 30;
         zero_reading_ += lightOnAvg - lightOffAvg;
         digitalWrite(led_pin_, LOW);
-        delay(10);
+        delay(2);
     }
     zero_reading_ /= 10;
     is_calibrated_ = 1;

@@ -7,7 +7,7 @@ MainWindow::MainWindow()
     // For now, change this port to whatever the Arduino is connected to
     initPort("/dev/ttyACM0");
 
-    connect(calibrate_, SIGNAL(clicked()), this, SLOT(calibrateOD()));
+    connect(calibrate_od_button_, SIGNAL(clicked()), this, SLOT(calibrateOD()));
     connect(port_, SIGNAL(readyRead()), this, SLOT(readData()));
     requestData();
 }
@@ -28,7 +28,7 @@ void MainWindow::initWindow()
     od_ = new QLabel("OD");
     do_ = new QLabel("DO");
     ph_ = new QLabel("pH");
-    calibrate_ = new QPushButton("Calibrate");
+    calibrate_od_button_ = new QPushButton("Calibrate OD");
     grid_layout_ = new QGridLayout();
     grid_layout_->addWidget(temp_, 0, 0);
     grid_layout_->addWidget(od_, 0, 1);
@@ -38,7 +38,7 @@ void MainWindow::initWindow()
     grid_layout_->addWidget(lcd_od_, 1, 1);
     grid_layout_->addWidget(lcd_do_, 3, 0);
     grid_layout_->addWidget(lcd_ph_, 3, 1);
-    grid_layout_->addWidget(calibrate_, 1, 2);
+    grid_layout_->addWidget(calibrate_od_button_, 1, 2);
     setLayout(grid_layout_);
     setWindowTitle("GUI");
 }

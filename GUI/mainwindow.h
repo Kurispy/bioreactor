@@ -30,7 +30,7 @@ private:
     QLabel *temp_, *od_, *do_, *ph_;
     QGridLayout *grid_layout_;
     QSerialPort *port_;
-    QPushButton *calibrate_;
+    QPushButton *calibrate_od_button_;
 };
 
 #endif // MAINWINDOW_H
