@@ -8,9 +8,14 @@ namespace BCommunication {
         Temperature,
         DO,
         pH,
-        Air
+        Air,
         TestRequest
+    };
+    
+    enum ConfigType {
+        CalibrateOD
     };
 }
 
 #endif	/* COMMUNICATION_H */
+

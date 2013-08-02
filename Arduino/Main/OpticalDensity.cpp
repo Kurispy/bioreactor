@@ -13,7 +13,7 @@ is_calibrated_(0)
 float ODSensor::getOD() {
     if (!is_calibrated_)
       return 0;
-    int lightOnAvg, lightOffAvg, reading, sum;
+    int lightOnAvg = 0, lightOffAvg = 0, reading = 0, sum = 0;
     for (int i = 0; i < 5; i++) {
         sum = 0;
         for (int j = 0; j < 30; j++) {
@@ -62,4 +62,5 @@ void ODSensor::calibrate() {
         delay(10);
     }
     zero_reading_ /= 10;
+    is_calibrated_ = 1;
 }

@@ -7,6 +7,7 @@ MainWindow::MainWindow()
     // For now, change this port to whatever the Arduino is connected to
     initPort("/dev/ttyACM0");
 
+    connect(calibrate_, SIGNAL(clicked()), this, SLOT(calibrateOD()));
     connect(port_, SIGNAL(readyRead()), this, SLOT(readData()));
     requestData();
 }
@@ -27,6 +28,7 @@ void MainWindow::initWindow()
     od_ = new QLabel("OD");
     do_ = new QLabel("DO");
     ph_ = new QLabel("pH");
+    calibrate_ = new QPushButton("Calibrate");
     grid_layout_ = new QGridLayout();
     grid_layout_->addWidget(temp_, 0, 0);
     grid_layout_->addWidget(od_, 0, 1);
@@ -36,6 +38,7 @@ void MainWindow::initWindow()
     grid_layout_->addWidget(lcd_od_, 1, 1);
     grid_layout_->addWidget(lcd_do_, 3, 0);
     grid_layout_->addWidget(lcd_ph_, 3, 1);
+    grid_layout_->addWidget(calibrate_, 1, 2);
     setLayout(grid_layout_);
     setWindowTitle("GUI");
 }
@@ -56,6 +59,11 @@ void MainWindow::initPort(const char *port)
 void MainWindow::closePort()
 {
     port_->close();
+}
+
+void MainWindow::configure(BCommunication::ConfigType config_type) {
+    port_->putChar(BCommunication::Config);
+    port_->putChar(config_type);
 }
 
 // Called when data is available to be read from the Arduino
@@ -110,6 +118,11 @@ void MainWindow::requestData()
 void MainWindow::requestData(BCommunication::PacketType packet_type)
 {
     port_->putChar(packet_type);
+}
+
+void MainWindow::calibrateOD() {
+    port_->clear();
+    configure(BCommunication::CalibrateOD);
 }
 
 // Sends a packet to the Arduino requesting the test cycle to begin for a

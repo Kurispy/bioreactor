@@ -24,9 +24,19 @@ void serialEvent() {
   // Data is sent as chars and not bytes due to the way Qt reads
   // from serial ports. This might be changed if it becomes an issue
   switch(packet_type) {
-    case BCommunication::Config:
-      
+    case BCommunication::Config: {
+      // This could be dangerous
+      while(Serial.available() == 0);
+      BCommunication::ConfigType config_type = 
+        (BCommunication::ConfigType) (Serial.read());
+        
+      switch(config_type) {
+        case BCommunication::CalibrateOD:
+          od_sen->calibrate();
+          break;
+      }
       break;
+    }
     case BCommunication::OD:
       Serial.write(BCommunication::OD);
       Serial.print(od_sen->getOD());

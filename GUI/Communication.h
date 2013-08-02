@@ -11,6 +11,10 @@ namespace BCommunication {
         Air,
         TestRequest
     };
+
+    enum ConfigType {
+        CalibrateOD
+    };
 }
 
 #endif	/* COMMUNICATION_H */
