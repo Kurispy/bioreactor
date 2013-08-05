@@ -15,7 +15,8 @@ private:
 class Thermoresistor {
 public:
     Thermoresistor(int pin);
-    void setPulseWidth(int pulse_width);
+    void setPulseWidth(float temperature);
+    void setState(bool on);
 private:
     int pin_;
     int pulse_width_;

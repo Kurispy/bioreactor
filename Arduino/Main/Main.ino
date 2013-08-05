@@ -5,7 +5,8 @@
 TemperatureSensor *temp_sen = new TemperatureSensor(A1);
 Thermoresistor *thermres = new Thermoresistor(9);
 ODSensor *od_sen = new ODSensor(A2, 10);
-
+float desired_temperature = 25.0; // Placeholder
+char buffer[8];
 
 void setup() {
   Serial.begin(9600);
@@ -13,6 +14,12 @@ void setup() {
 }
 
 void loop() {
+  // This is where any sort of any sort of internal feedback
+  // actions should be placed
+  if(temp_sen->getTemperature() < desired_temperature)
+    thermres->setState(1);
+  else
+    thermres->setState(0);
   
 }
 
@@ -36,8 +43,12 @@ void serialEvent() {
           break;
         case BCommunication::SetTemperature:
           while(!Serial.available());
-          unsigned char pulse_width = Serial.read();
-          thermres->setPulseWidth((int) pulse_width);
+          for(int i = 0; Serial.peek() != '\n'; i++) {
+            buffer[i] = Serial.read();
+          }
+          Serial.read();
+          desired_temperature = *(reinterpret_cast<float *>(buffer));
+          thermres->setPulseWidth(desired_temperature);
           break;
       }
       break;
@@ -56,7 +67,8 @@ void serialEvent() {
       break;
     case BCommunication::Temperature:
       Serial.write(BCommunication::Temperature);
-      Serial.print(temp_sen->getTemperature());
+      Serial.print(desired_temperature);
+      //Serial.print(temp_sen->getTemperature());
       Serial.write('\n');
       Serial.flush();
       break;

@@ -9,7 +9,12 @@ MainWindow::MainWindow()
 
     connect(calibrate_od_button_, SIGNAL(clicked()), this, SLOT(calibrateOD()));
     connect(port_, SIGNAL(readyRead()), this, SLOT(readData()));
-    requestData();
+    connect(temperature_slider_, SIGNAL(valueChanged(int)), this, SLOT(intToDouble(int)));
+    connect(this, SIGNAL(intToDouble(double)), temperature_spin_box_, SLOT(setValue(double)));
+    connect(temperature_spin_box_, SIGNAL(valueChanged(double)), this, SLOT(doubleToInt(double)));
+    connect(this, SIGNAL(doubleToInt(int)), temperature_slider_, SLOT(setValue(int)));
+    connect(temperature_spin_box_, SIGNAL(valueChanged(double)), this, SLOT(doubleToFloat(double)));
+    connect(this, SIGNAL(doubleToFloat(float)), this, SLOT(setTemperature(float)));
 }
 
 MainWindow::~MainWindow()
@@ -29,7 +34,13 @@ void MainWindow::initWindow()
     do_ = new QLabel("DO");
     ph_ = new QLabel("pH");
     calibrate_od_button_ = new QPushButton("Calibrate OD");
+    temperature_slider_ = new QSlider(Qt::Vertical);
+    temperature_spin_box_ = new QDoubleSpinBox();
+    temperature_slider_->setMaximum(30);
+    temperature_slider_->setMinimum(10);
+    temperature_spin_box_->setRange(10, 30);
     grid_layout_ = new QGridLayout();
+
     grid_layout_->addWidget(temp_, 0, 0);
     grid_layout_->addWidget(od_, 0, 1);
     grid_layout_->addWidget(do_, 2, 0);
@@ -39,6 +50,9 @@ void MainWindow::initWindow()
     grid_layout_->addWidget(do_display_, 3, 0);
     grid_layout_->addWidget(ph_display_, 3, 1);
     grid_layout_->addWidget(calibrate_od_button_, 1, 2);
+    grid_layout_->addWidget(temperature_slider_, 2, 3, 3, 1);
+    grid_layout_->addWidget(temperature_spin_box_, 1, 3);
+
     setLayout(grid_layout_);
     setWindowTitle("GUI");
 }
@@ -126,13 +140,11 @@ void MainWindow::calibrateOD() {
     configure(BCommunication::CalibrateOD);
 }
 
-// Send a pulse width for the thermoresistor to the Arduino, based on temperature
+// Sends a desired temperature to the Arduino
 void MainWindow::setTemperature(float temperature) {
-    unsigned char pulse_width;
-    // Convert temperature to pulse width here
-    pulse_width = floor(temperature);
     configure(BCommunication::SetTemperature);
-    port_->putChar(pulse_width);
+    port_->write(reinterpret_cast<const char*>(&temperature), sizeof(temperature));
+    port_->putChar('\n');
 }
 
 // Sends a packet to the Arduino requesting the test cycle to begin for a
@@ -141,4 +153,16 @@ void MainWindow::beginTestCycle(int chamber)
 {
     port_->putChar(BCommunication::TestRequest);
     port_->putChar(chamber);
+}
+
+void MainWindow::intToDouble(int value) {
+    intToDouble((double) value);
+}
+
+void MainWindow::doubleToInt(double value) {
+    doubleToInt((int) value);
+}
+
+void MainWindow::doubleToFloat(double value) {
+    doubleToFloat((float) value);
 }

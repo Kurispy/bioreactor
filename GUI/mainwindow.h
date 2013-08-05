@@ -14,23 +14,35 @@ public:
     MainWindow();
     ~MainWindow();
 
+signals:
+    void intToDouble(double);
+    void doubleToInt(int);
+    void doubleToFloat(float);
+
+
 public slots:
     void readData();
     void requestData();
     void requestData(BCommunication::PacketType packet_type);
     void calibrateOD();
+    void setTemperature(float temperature);
     void beginTestCycle(int chamber);
+    void intToDouble(int value);
+    void doubleToInt(double value);
+    void doubleToFloat(double value);
 
 private:
     void initWindow();
     void initPort(const char *port);
     void closePort();
     void configure(BCommunication::ConfigType config_type);
-    QLabel *lcd_temp_, *lcd_od_, *lcd_do_, *lcd_ph_;
+    QLabel *temp_display_, *od_display_, *do_display_, *ph_display_;
     QLabel *temp_, *od_, *do_, *ph_;
     QGridLayout *grid_layout_;
     QSerialPort *port_;
     QPushButton *calibrate_od_button_;
+    QSlider *temperature_slider_;
+    QDoubleSpinBox *temperature_spin_box_;
 };
 
 #endif // MAINWINDOW_H
