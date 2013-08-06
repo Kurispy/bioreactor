@@ -136,7 +136,6 @@ void MainWindow::requestData(BCommunication::PacketType packet_type)
 
 // Requests the Arduino to zero the OD
 void MainWindow::calibrateOD() {
-    port_->clear();
     configure(BCommunication::CalibrateOD);
 }
 

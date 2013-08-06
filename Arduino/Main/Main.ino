@@ -5,11 +5,12 @@
 TemperatureSensor *temp_sen = new TemperatureSensor(A1);
 Thermoresistor *thermres = new Thermoresistor(9);
 ODSensor *od_sen = new ODSensor(A2, 10);
-float desired_temperature = 25.0; // Placeholder
+float desired_temperature = 25.0;
 char buffer[8];
 
 void setup() {
   Serial.begin(9600);
+  Serial1.begin(38400);
   analogReadResolution(12);
 }
 
@@ -20,7 +21,6 @@ void loop() {
     thermres->setState(1);
   else
     thermres->setState(0);
-  
 }
 
 // Run whenever serial data is available to be read
@@ -28,12 +28,10 @@ void serialEvent() {
   BCommunication::PacketType packet_type = 
     (BCommunication::PacketType) Serial.read();
   
-  // Data is sent as chars and not bytes due to the way Qt reads
-  // from serial ports. This might be changed if it becomes an issue
   switch(packet_type) {
     case BCommunication::Config: {
       // This could be dangerous. Should be changed to timeout
-      while(!Serial.available() == 0);
+      while(!Serial.available());
       BCommunication::ConfigType config_type = 
         (BCommunication::ConfigType) Serial.read();
         
@@ -41,15 +39,18 @@ void serialEvent() {
         case BCommunication::CalibrateOD:
           od_sen->calibrate();
           break;
-        case BCommunication::SetTemperature:
+        case BCommunication::SetTemperature: {
           while(!Serial.available());
-          for(int i = 0; Serial.peek() != '\n'; i++) {
+          for(int i = 0; Serial.peek() != '\n'; i++) 
+          {
             buffer[i] = Serial.read();
+            while(!Serial.available());
           }
           Serial.read();
           desired_temperature = *(reinterpret_cast<float *>(buffer));
           thermres->setPulseWidth(desired_temperature);
           break;
+        }
       }
       break;
     }
@@ -67,8 +68,7 @@ void serialEvent() {
       break;
     case BCommunication::Temperature:
       Serial.write(BCommunication::Temperature);
-      Serial.print(desired_temperature);
-      //Serial.print(temp_sen->getTemperature());
+      Serial.print(temp_sen->getTemperature());
       Serial.write('\n');
       Serial.flush();
       break;
@@ -77,7 +77,15 @@ void serialEvent() {
       break;
     case BCommunication::pH:
       Serial.write(BCommunication::pH);
-      Serial.print(12345);
+      Serial1.print("r\r");
+      while(!Serial1.available());
+      for(int i = 0; Serial1.peek() != '\r'; i++) 
+      {
+        buffer[i] = Serial1.read();
+        while(!Serial1.available());
+      }
+      Serial1.read();
+      Serial.print(buffer);
       Serial.write('\n');
       Serial.flush();
       break;
@@ -87,8 +95,15 @@ void serialEvent() {
   }
 }
 
+void serialEvent1() {
+  
+}
+
+
 // This is needed due to a bug in 1.5.2 (Do not modify this)
 void serialEventRun(void) {
   if (Serial.available())
     serialEvent();
+  if (Serial1.available())
+    serialEvent1();
 }
