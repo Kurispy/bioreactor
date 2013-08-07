@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     QTimer *timer = new QTimer();
     MainWindow w;
     timer->connect(timer, SIGNAL(timeout()), &w, SLOT(requestData()));
-    timer->start(1000);
+    timer->start(378);
     w.show();
     
     return a.exec();

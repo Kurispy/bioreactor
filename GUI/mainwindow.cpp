@@ -85,6 +85,7 @@ void MainWindow::configure(BCommunication::ConfigType config_type) {
 void MainWindow::readData()
 {
     char c;
+    int x;
 
     if (!port_->canReadLine())
         return;
@@ -110,7 +111,8 @@ void MainWindow::readData()
 
         break;
       case BCommunication::pH:
-        ph_display_->setText(data);
+        x = data.length();
+        ph_display_->setText(data);        
         break;
       default:
 

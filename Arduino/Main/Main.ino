@@ -7,6 +7,7 @@ Thermoresistor *thermres = new Thermoresistor(9);
 ODSensor *od_sen = new ODSensor(A2, 10);
 float desired_temperature = 25.0;
 char buffer[8];
+int k = 0, i = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -41,7 +42,7 @@ void serialEvent() {
           break;
         case BCommunication::SetTemperature: {
           while(!Serial.available());
-          for(int i = 0; Serial.peek() != '\n'; i++) 
+          for(i = 0; Serial.peek() != '\n' && i < 8; i++) 
           {
             buffer[i] = Serial.read();
             while(!Serial.available());
@@ -62,7 +63,7 @@ void serialEvent() {
       break;
     case BCommunication::DO:
       Serial.write(BCommunication::DO);
-      Serial.print(12345);
+      Serial.print(++k);
       Serial.write('\n');
       Serial.flush();
       break;
@@ -76,15 +77,16 @@ void serialEvent() {
       
       break;
     case BCommunication::pH:
-      Serial.write(BCommunication::pH);
       Serial1.print("r\r");
       while(!Serial1.available());
-      for(int i = 0; Serial1.peek() != '\r'; i++) 
+      for(i = 0; Serial1.peek() != '\r' && i < 8; i++) 
       {
         buffer[i] = Serial1.read();
         while(!Serial1.available());
       }
+      buffer[i] = '\0';
       Serial1.read();
+      Serial.write(BCommunication::pH);
       Serial.print(buffer);
       Serial.write('\n');
       Serial.flush();
