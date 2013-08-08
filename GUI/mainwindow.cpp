@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "OD.h"
 
 MainWindow::MainWindow()
 {
@@ -52,6 +53,7 @@ void MainWindow::initWindow()
     grid_layout_->addWidget(calibrate_od_button_, 1, 2);
     grid_layout_->addWidget(temperature_slider_, 2, 3, 3, 1);
     grid_layout_->addWidget(temperature_spin_box_, 1, 3);
+    grid_layout_->addWidget(new ODOverview, 6, 6);
 
     setLayout(grid_layout_);
     setWindowTitle("GUI");
@@ -85,7 +87,6 @@ void MainWindow::configure(BCommunication::ConfigType config_type) {
 void MainWindow::readData()
 {
     char c;
-    int x;
 
     if (!port_->canReadLine())
         return;
@@ -111,7 +112,6 @@ void MainWindow::readData()
 
         break;
       case BCommunication::pH:
-        x = data.length();
         ph_display_->setText(data);        
         break;
       default:

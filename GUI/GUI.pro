@@ -8,10 +8,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    OD.cpp
 
 HEADERS  += mainwindow.h \
-    Communication.h
+    Communication.h \
+    OD.h
 
 OTHER_FILES += \
     README.txt
