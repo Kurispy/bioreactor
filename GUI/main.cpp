@@ -1,5 +1,6 @@
 #include "MainWidget.h"
 #include <QtWidgets/QApplication>
+#include <QtCore/QTimer>
 
 int main(int argc, char *argv[])
 {
