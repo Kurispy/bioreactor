@@ -132,7 +132,7 @@ public:
         actionAboutBioreactor->setObjectName(QStringLiteral("actionAboutBioreactor"));
 
         QIcon icon;
-        icon.addFile(QStringLiteral(":/new/Resource/images/application-exit.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QStringLiteral("images/application-exit.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionExit->setIcon(icon);
 
         QIcon icon1;
