@@ -1,7 +1,0 @@
-#include macros need to be updated according to where your system places 
-the header files.
-
-On my machine, #include <QApplication> is #include <QtWidgets/QApplication>.
-We can make computable includes or a script to replace includes accordingly.
-
-

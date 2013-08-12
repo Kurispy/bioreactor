@@ -25,7 +25,6 @@ private:
     QFrame *frame;
     QDockWidget *dockMonitor;
     QDockWidget *dockControl;
-    QWidget *widgetMonitor;
     QWidget *centralWidget;
 
     QAction *actionNew;
@@ -43,10 +42,10 @@ private:
     QMenu *menuEdit;
     QMenu *menuOptions;
     QMenu *menuAbout;
+
     QStatusBar *statusBar;
     QToolBar *mainToolBar;
 
-    QGridLayout *layout;
     QGridLayout *layoutCentralWidget;
     QGridLayout *layoutFrame;
     QCustomPlot *chartMain;
@@ -82,7 +81,6 @@ public:
         control->setup();
         dockControl->setWidget(control);
         MainWidget->addDockWidget(static_cast<Qt::DockWidgetArea>(2), dockControl);
-//		control.setup(MainWidget);
 
 
 //		Chart
