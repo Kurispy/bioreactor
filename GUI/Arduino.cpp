@@ -28,7 +28,7 @@ void Arduino::readData()
     if (!canReadLine())
         return;
     data = new QString(readLine());
-    dataReady(data);
+    emit dataReady(data);
 }
 
 // Sends a packet to the Arduino requesting a reading from all sensors
