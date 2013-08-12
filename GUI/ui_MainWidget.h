@@ -111,26 +111,33 @@ public:
 
     void setupActions(QMainWindow *MainWidget)
     {
-        actionNew = new QAction(MainWidget);
-        actionSave = new QAction(MainWidget);
-        actionSave_As = new QAction(MainWidget);
-        actionClose = new QAction(MainWidget);
-        actionExit = new QAction(MainWidget);
-        actionPreferences = new QAction(MainWidget);
-        actionConnect = new QAction(MainWidget);
-        actionDisconnect = new QAction(MainWidget);
-        actionAboutBioreactor = new QAction(MainWidget);
+		actionNew = new QAction(MainWidget);
+		actionNew->setObjectName(QStringLiteral("actionNew"));
 
-        actionNew->setObjectName(QStringLiteral("actionNew"));
-        actionSave->setObjectName(QStringLiteral("actionSave"));
-        actionSave_As->setObjectName(QStringLiteral("actionSave_As"));
-        actionClose->setObjectName(QStringLiteral("actionClose"));
-        actionExit->setObjectName(QStringLiteral("actionExit"));
-        actionPreferences->setObjectName(QStringLiteral("actionPreferences"));
-        actionConnect->setObjectName(QStringLiteral("actionConnect"));
-        actionDisconnect->setObjectName(QStringLiteral("actionDisconnect"));
-        actionAboutBioreactor->setObjectName(QStringLiteral("actionAboutBioreactor"));
+		actionSave = new QAction(MainWidget);
+		actionSave->setObjectName(QStringLiteral("actionSave"));
 
+		actionSave_As = new QAction(MainWidget);
+		actionSave_As->setObjectName(QStringLiteral("actionSave_As"));
+
+		actionClose = new QAction(MainWidget);
+		actionClose->setObjectName(QStringLiteral("actionClose"));
+
+		actionExit = new QAction(MainWidget);
+		actionExit->setObjectName(QStringLiteral("actionExit"));
+
+		actionPreferences = new QAction(MainWidget);
+		actionPreferences->setObjectName(QStringLiteral("actionPreferences"));
+
+		actionConnect = new QAction(MainWidget);
+		actionConnect->setObjectName(QStringLiteral("actionConnect"));
+
+		actionDisconnect = new QAction(MainWidget);
+		actionDisconnect->setObjectName(QStringLiteral("actionDisconnect"));
+
+		actionAboutBioreactor = new QAction(MainWidget);
+		actionAboutBioreactor->setObjectName(QStringLiteral("actionAboutBioreactor"));
+        
         QIcon icon;
         icon.addFile(QStringLiteral(":/images/application-exit.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionExit->setIcon(icon);
@@ -148,33 +155,39 @@ public:
     {
         menuBar = new QMenuBar(MainWidget);
         menuBar->setGeometry(QRect(0, 0, 1126, 19));
-        menuFile = new QMenu(menuBar);
-        menuEdit = new QMenu(menuBar);
-        menuOptions = new QMenu(menuBar);
-        menuAbout = new QMenu(menuBar);
-
         menuBar->setObjectName(QStringLiteral("menuBar"));
+        
+        menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
+        
+        menuEdit = new QMenu(menuBar);
         menuEdit->setObjectName(QStringLiteral("menuEdit"));
+        
+        menuOptions = new QMenu(menuBar);
         menuOptions->setObjectName(QStringLiteral("menuOptions"));
+        
+        menuAbout = new QMenu(menuBar);
         menuAbout->setObjectName(QStringLiteral("menuAbout"));
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuEdit->menuAction());
         menuBar->addAction(menuOptions->menuAction());
         menuBar->addAction(menuAbout->menuAction());
+        
         menuFile->addAction(actionNew);
         menuFile->addAction(actionSave);
         menuFile->addAction(actionSave_As);
         menuFile->addAction(actionClose);
         menuFile->addAction(actionExit);
+        
         menuOptions->addAction(actionConnect);
         menuOptions->addAction(actionDisconnect);
+        
         menuEdit->addAction(actionPreferences);
+        
         menuAbout->addAction(actionAboutBioreactor);
+        
         MainWidget->setMenuBar(menuBar);
-
-
     }
 
     void setupToolBars(QMainWindow *MainWidget)
