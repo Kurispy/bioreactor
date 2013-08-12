@@ -132,15 +132,15 @@ public:
         actionAboutBioreactor->setObjectName(QStringLiteral("actionAboutBioreactor"));
 
         QIcon icon;
-        icon.addFile(QStringLiteral("images/application-exit.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QStringLiteral(":/images/application-exit.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionExit->setIcon(icon);
 
         QIcon icon1;
-        icon1.addFile(QStringLiteral("images/connect.png"), QSize(), QIcon::Normal, QIcon::On);
+        icon1.addFile(QStringLiteral(":/images/connect.png"), QSize(), QIcon::Normal, QIcon::On);
         actionConnect->setIcon(icon1);
 
         QIcon icon2;
-        icon2.addFile(QStringLiteral("images/disconnect.png"), QSize(), QIcon::Normal, QIcon::On);
+        icon2.addFile(QStringLiteral(":/images/disconnect.png"), QSize(), QIcon::Normal, QIcon::On);
         actionDisconnect->setIcon(icon2);
     }
 

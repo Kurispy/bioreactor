@@ -18,3 +18,5 @@ HEADERS += Communication.h \
            ui_MainWidget.h \
            ui_Monitor.h
 SOURCES += main.cpp MainWidget.cpp qcustomplot.cpp
+
+RESOURCES = GUI.qrc
