@@ -1,7 +1,4 @@
-#include macros need to be updated according to where your system places 
-the header files.
-
-On my machine, #include <QApplication> is #include <QtWidgets/QApplication>.
-We can make computable includes or a script to replace includes accordingly.
-
+The calibrateOD function is not implemented here because I feel like 
+we're mixing the front end and back end by doing it. Hopefully, in a few
+days we're going to be able to fully separate the UI and the core functionality.
 

@@ -10,7 +10,7 @@
 class Monitor : public QWidget
 {
 
-	friend MainWidget;
+	friend class MainWidget;
 
 private:
 

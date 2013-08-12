@@ -49,8 +49,8 @@ public:
         tabWidget->addTab(tab_control,QString());
         tabWidget->setCurrentIndex(0);
 
-        tabWidget->setTabText(tabWidget->indexOf(tab_pump), "Tab pump");
-        tabWidget->setTabText(tabWidget->indexOf(tab_control), "Tab control");
+        tabWidget->setTabText(tabWidget->indexOf(tab_pump), "Pump");
+        tabWidget->setTabText(tabWidget->indexOf(tab_control), "Control");
     }
 
 	void makePumpControls(QWidget *parent, int num, QVBoxLayout *layout)
@@ -88,6 +88,10 @@ public:
 		Hlayout->addWidget(buttonDirection);
 
 		layout->addLayout(Hlayout);
+
+		connect(slider, SIGNAL(sliderMoved(int)), spinBox, SLOT(setValue(int)));
+		connect(spinBox, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
+
 	}
 
 };
