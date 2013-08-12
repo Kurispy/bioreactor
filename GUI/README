@@ -1,0 +1,4 @@
+The calibrateOD function is not implemented here because I feel like 
+we're mixing the front end and back end by doing it. Hopefully, in a few
+days we're going to be able to fully separate the UI and the core functionality.
+

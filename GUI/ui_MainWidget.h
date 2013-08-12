@@ -13,7 +13,6 @@
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QDockWidget>
 
-
 class Ui_MainWidget
 {
 	friend class MainWidget;

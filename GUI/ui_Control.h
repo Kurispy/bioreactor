@@ -49,8 +49,8 @@ public:
         tabWidget->addTab(tab_control,QString());
         tabWidget->setCurrentIndex(0);
 
-        tabWidget->setTabText(tabWidget->indexOf(tab_pump), "Tab pump");
-        tabWidget->setTabText(tabWidget->indexOf(tab_control), "Tab control");
+        tabWidget->setTabText(tabWidget->indexOf(tab_pump), "Pump");
+        tabWidget->setTabText(tabWidget->indexOf(tab_control), "Control");
     }
 
 	void makePumpControls(QWidget *parent, int num, QVBoxLayout *layout)
