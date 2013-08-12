@@ -16,7 +16,7 @@
 
 class Ui_MainWidget
 {
-	friend MainWidget;
+	friend class MainWidget;
 private:
 
     Monitor *monitor;

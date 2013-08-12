@@ -88,6 +88,10 @@ public:
 		Hlayout->addWidget(buttonDirection);
 
 		layout->addLayout(Hlayout);
+
+		connect(slider, SIGNAL(sliderMoved(int)), spinBox, SLOT(setValue(int)));
+		connect(spinBox, SIGNAL(valueChanged(int)), slider, SLOT(setValue(int)));
+
 	}
 
 };
