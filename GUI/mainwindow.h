@@ -26,6 +26,7 @@ public slots:
     void requestData(BCommunication::PacketType packet_type);
     void calibrateOD();
     void setTemperature(float temperature);
+    void setSolenoid(bool on);
     void beginTestCycle(int chamber);
     void intToDouble(int value);
     void doubleToInt(double value);
@@ -41,6 +42,7 @@ private:
     QGridLayout *grid_layout_;
     QSerialPort *port_;
     QPushButton *calibrate_od_button_;
+    QCheckBox *solenoid_switch_;
     QSlider *temperature_slider_;
     QDoubleSpinBox *temperature_spin_box_;
 };

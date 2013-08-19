@@ -1,17 +1,19 @@
 #include "Temperature.h"
 #include "OpticalDensity.h"
 #include "Communication.h"
+#include "Solenoid.h"
 
 TemperatureSensor *temp_sen = new TemperatureSensor(A1);
 Thermoresistor *thermres = new Thermoresistor(9);
 ODSensor *od_sen = new ODSensor(A2, 10);
+Solenoid *solenoid = new Solenoid(7);
 float desired_temperature = 25.0;
 char buffer[8];
 int k = 0, i = 0;
 
 void setup() {
   Serial.begin(9600);
-  Serial1.begin(38400);
+  Serial1.begin(9600);
   analogReadResolution(12);
 }
 
@@ -50,6 +52,12 @@ void serialEvent() {
           Serial.read();
           desired_temperature = *(reinterpret_cast<float *>(buffer));
           thermres->setPulseWidth(desired_temperature);
+          break;
+        }
+        case BCommunication::SetSolenoid: {
+          while(!Serial.available());
+          solenoid->setState(Serial.read());
+          Serial.read();
           break;
         }
       }

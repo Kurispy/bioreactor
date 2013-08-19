@@ -14,7 +14,8 @@ namespace BCommunication {
 
     enum ConfigType {
         CalibrateOD,
-        SetTemperature
+        SetTemperature,
+        SetSolenoid
     };
 }
 

@@ -9,6 +9,7 @@ MainWindow::MainWindow()
     initPort("/dev/ttyACM0");
 
     connect(calibrate_od_button_, SIGNAL(clicked()), this, SLOT(calibrateOD()));
+    connect(solenoid_switch_, SIGNAL(toggled(bool)), this, SLOT(setSolenoid(bool)));
     connect(port_, SIGNAL(readyRead()), this, SLOT(readData()));
     connect(temperature_slider_, SIGNAL(valueChanged(int)), this, SLOT(intToDouble(int)));
     connect(this, SIGNAL(intToDouble(double)), temperature_spin_box_, SLOT(setValue(double)));
@@ -35,6 +36,7 @@ void MainWindow::initWindow()
     do_ = new QLabel("DO");
     ph_ = new QLabel("pH");
     calibrate_od_button_ = new QPushButton("Calibrate OD");
+    solenoid_switch_ = new QCheckBox("Solenoid On/Off");
     temperature_slider_ = new QSlider(Qt::Vertical);
     temperature_spin_box_ = new QDoubleSpinBox();
     temperature_slider_->setMaximum(30);
@@ -53,6 +55,7 @@ void MainWindow::initWindow()
     grid_layout_->addWidget(calibrate_od_button_, 1, 2);
     grid_layout_->addWidget(temperature_slider_, 2, 3, 3, 1);
     grid_layout_->addWidget(temperature_spin_box_, 1, 3);
+    grid_layout_->addWidget(solenoid_switch_, 5, 6);
     grid_layout_->addWidget(new ODOverview, 6, 6);
 
     setLayout(grid_layout_);
@@ -145,6 +148,12 @@ void MainWindow::calibrateOD() {
 void MainWindow::setTemperature(float temperature) {
     configure(BCommunication::SetTemperature);
     port_->write(reinterpret_cast<const char*>(&temperature), sizeof(temperature));
+    port_->putChar('\n');
+}
+
+void MainWindow::setSolenoid(bool on) {
+    configure(BCommunication::SetSolenoid);
+    port_->write(reinterpret_cast<const char*>(&on), sizeof(on));
     port_->putChar('\n');
 }
 
