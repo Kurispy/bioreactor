@@ -9,8 +9,13 @@ MainWindow::MainWindow()
     initPort("/dev/ttyACM0");
 
     connect(calibrate_od_button_, SIGNAL(clicked()), this, SLOT(calibrateOD()));
-    connect(solenoid_switch_, SIGNAL(toggled(bool)), this, SLOT(setSolenoid(bool)));
+    connect(solenoid_switch_, SIGNAL(toggled(bool)), this, SLOT(setSolenoidState(bool)));
+    connect(motor_switch_, SIGNAL(toggled(bool)), this, SLOT(setMotorState(bool)));
     connect(port_, SIGNAL(readyRead()), this, SLOT(readData()));
+    connect(motor_rpm_spin_box_, SIGNAL(valueChanged(int)), this, SLOT(setMotorSpeed(int)));
+    connect(motor_rpm_spin_box_, SIGNAL(valueChanged(int)), motor_rpm_slider_, SLOT(setValue(int)));
+    connect(motor_rpm_slider_, SIGNAL(valueChanged(int)), motor_rpm_spin_box_, SLOT(setValue(int)));
+
     connect(temperature_slider_, SIGNAL(valueChanged(int)), this, SLOT(intToDouble(int)));
     connect(this, SIGNAL(intToDouble(double)), temperature_spin_box_, SLOT(setValue(double)));
     connect(temperature_spin_box_, SIGNAL(valueChanged(double)), this, SLOT(doubleToInt(double)));
@@ -37,7 +42,12 @@ void MainWindow::initWindow()
     ph_ = new QLabel("pH");
     calibrate_od_button_ = new QPushButton("Calibrate OD");
     solenoid_switch_ = new QCheckBox("Solenoid On/Off");
+    motor_switch_ = new QCheckBox("Motor On/Off");
     temperature_slider_ = new QSlider(Qt::Vertical);
+    motor_rpm_slider_ = new QSlider(Qt::Vertical);
+    motor_rpm_slider_->setMaximum(255);
+    motor_rpm_spin_box_ = new QSpinBox();
+    motor_rpm_spin_box_->setMaximum(255);
     temperature_spin_box_ = new QDoubleSpinBox();
     temperature_slider_->setMaximum(30);
     temperature_slider_->setMinimum(10);
@@ -56,6 +66,9 @@ void MainWindow::initWindow()
     grid_layout_->addWidget(temperature_slider_, 2, 3, 3, 1);
     grid_layout_->addWidget(temperature_spin_box_, 1, 3);
     grid_layout_->addWidget(solenoid_switch_, 5, 6);
+    grid_layout_->addWidget(motor_switch_, 4, 6);
+    grid_layout_->addWidget(motor_rpm_slider_, 1, 6, 2, 1, Qt::AlignCenter);
+    grid_layout_->addWidget(motor_rpm_spin_box_, 0, 6);
     grid_layout_->addWidget(new ODOverview, 6, 6);
 
     setLayout(grid_layout_);
@@ -151,9 +164,23 @@ void MainWindow::setTemperature(float temperature) {
     port_->putChar('\n');
 }
 
-void MainWindow::setSolenoid(bool on) {
-    configure(BCommunication::SetSolenoid);
+void MainWindow::setSolenoidState(bool on) {
+    configure(BCommunication::SetSolenoidState);
     port_->write(reinterpret_cast<const char*>(&on), sizeof(on));
+    port_->putChar('\n');
+}
+
+void MainWindow::setMotorState(bool on) {
+    configure(BCommunication::SetMotorState);
+    port_->write(reinterpret_cast<const char*>(&on), sizeof(on));
+    port_->putChar('\n');
+}
+
+void MainWindow::setMotorSpeed(int rpm) {
+    // Transfer function
+    int pulse_width = rpm;
+    configure(BCommunication::SetMotorSpeed);
+    port_->write(reinterpret_cast<const char*>(&pulse_width), sizeof(pulse_width));
     port_->putChar('\n');
 }
 

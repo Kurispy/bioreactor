@@ -15,7 +15,9 @@ namespace BCommunication {
     enum ConfigType {
         CalibrateOD,
         SetTemperature,
-        SetSolenoid
+        SetSolenoidState,
+        SetMotorState,
+        SetMotorSpeed
     };
 }
 

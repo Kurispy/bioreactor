@@ -20,6 +20,8 @@ Thermoresistor::Thermoresistor(int pin) : pin_(pin) {
 void Thermoresistor::setPulseWidth(float temperature) {
     // Transfer function goes here
     pulse_width_ = (int) temperature;
+    if (state_)
+      analogWrite(pin_, pulse_width_);
 }
 
 void Thermoresistor::setState(bool on) {

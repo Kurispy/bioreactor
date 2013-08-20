@@ -2,11 +2,13 @@
 #include "OpticalDensity.h"
 #include "Communication.h"
 #include "Solenoid.h"
+#include "Motor.h"
 
-TemperatureSensor *temp_sen = new TemperatureSensor(A1);
+TemperatureSensor *temp_sen = new TemperatureSensor(A2);
 Thermoresistor *thermres = new Thermoresistor(9);
-ODSensor *od_sen = new ODSensor(A2, 10);
-Solenoid *solenoid = new Solenoid(7);
+ODSensor *od_sen = new ODSensor(A0, 13);
+Solenoid *solenoid = new Solenoid(11);
+Motor *motor = new Motor(7);
 float desired_temperature = 25.0;
 char buffer[8];
 int k = 0, i = 0;
@@ -54,10 +56,27 @@ void serialEvent() {
           thermres->setPulseWidth(desired_temperature);
           break;
         }
-        case BCommunication::SetSolenoid: {
+        case BCommunication::SetSolenoidState: {
           while(!Serial.available());
           solenoid->setState(Serial.read());
           Serial.read();
+          break;
+        }
+        case BCommunication::SetMotorState: {
+          while(!Serial.available());
+          motor->setState(Serial.read());
+          Serial.read();
+          break;
+        }
+        case BCommunication::SetMotorSpeed: {
+          while(!Serial.available());
+          for(i = 0; Serial.peek() != '\n' && i < 8; i++) 
+          {
+            buffer[i] = Serial.read();
+            while(!Serial.available());
+          }
+          Serial.read();
+          motor->setPulseWidth(*(reinterpret_cast<int *>(buffer)));
           break;
         }
       }
