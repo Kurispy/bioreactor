@@ -12,6 +12,7 @@ Motor *motor = new Motor(7);
 float desired_temperature = 25.0;
 char buffer[8];
 int k = 0, i = 0;
+float ph = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -19,9 +20,9 @@ void setup() {
   analogReadResolution(12);
 }
 
+// This is where any sort of any sort of internal feedback
+// actions should be placed
 void loop() {
-  // This is where any sort of any sort of internal feedback
-  // actions should be placed
   if(temp_sen->getTemperature() < desired_temperature)
     thermres->setState(1);
   else
@@ -35,8 +36,7 @@ void serialEvent() {
   
   switch(packet_type) {
     case BCommunication::Config: {
-      // This could be dangerous. Should be changed to timeout
-      while(!Serial.available());
+      waitForSerialData(500);
       BCommunication::ConfigType config_type = 
         (BCommunication::ConfigType) Serial.read();
         
@@ -45,11 +45,11 @@ void serialEvent() {
           od_sen->calibrate();
           break;
         case BCommunication::SetTemperature: {
-          while(!Serial.available());
+          waitForSerialData(500);
           for(i = 0; Serial.peek() != '\n' && i < 8; i++) 
           {
             buffer[i] = Serial.read();
-            while(!Serial.available());
+            waitForSerialData(500);
           }
           Serial.read();
           desired_temperature = *(reinterpret_cast<float *>(buffer));
@@ -57,23 +57,23 @@ void serialEvent() {
           break;
         }
         case BCommunication::SetSolenoidState: {
-          while(!Serial.available());
+          waitForSerialData(500);
           solenoid->setState(Serial.read());
           Serial.read();
           break;
         }
         case BCommunication::SetMotorState: {
-          while(!Serial.available());
+          waitForSerialData(500);
           motor->setState(Serial.read());
           Serial.read();
           break;
         }
         case BCommunication::SetMotorSpeed: {
-          while(!Serial.available());
+          waitForSerialData(500);
           for(i = 0; Serial.peek() != '\n' && i < 8; i++) 
           {
             buffer[i] = Serial.read();
-            while(!Serial.available());
+            waitForSerialData(500);
           }
           Serial.read();
           motor->setPulseWidth(*(reinterpret_cast<int *>(buffer)));
@@ -105,11 +105,11 @@ void serialEvent() {
       break;
     case BCommunication::pH:
       Serial1.print("r\r");
-      while(!Serial1.available());
+      waitForSerial1Data(500);
       for(i = 0; Serial1.peek() != '\r' && i < 8; i++) 
       {
         buffer[i] = Serial1.read();
-        while(!Serial1.available());
+        waitForSerial1Data(500);
       }
       buffer[i] = '\0';
       Serial1.read();
@@ -136,3 +136,24 @@ void serialEventRun(void) {
   if (Serial1.available())
     serialEvent1();
 }
+
+// Waits ms milliseconds for serial data to arrive. Returns 1 if it
+// times out, 0 otherwise.
+int waitForSerialData(unsigned long ms) {
+  unsigned long start = millis();
+  while(!Serial.available()) {
+    if (millis() - start > ms)
+      return 1;
+  }
+  return 0;
+}
+
+int waitForSerial1Data(unsigned long ms) {
+  unsigned long start = millis();
+  while(!Serial1.available()) {
+    if (millis() - start > ms)
+      return 1;
+  }
+  return 0;
+}
+  
