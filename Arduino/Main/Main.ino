@@ -8,16 +8,21 @@ TemperatureSensor *temp_sen = new TemperatureSensor(A2);
 Thermoresistor *thermres = new Thermoresistor(9);
 ODSensor *od_sen = new ODSensor(A0, 13);
 Solenoid *solenoid = new Solenoid(11);
-Motor *motor = new Motor(7);
+Motor *air_pump = new Motor(4);
+Motor *media_pump = new Motor(5);
 float desired_temperature = 25.0;
 char buffer[8];
 int k = 0, i = 0;
 float ph = 0;
+unsigned long last_pulse = 0;
 
 void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
   analogReadResolution(12);
+  media_pump->setPulseWidth(255);
+  air_pump->setPulseWidth(255);
+  air_pump->setState(1);
 }
 
 // This is where any sort of any sort of internal feedback
@@ -27,6 +32,13 @@ void loop() {
     thermres->setState(1);
   else
     thermres->setState(0);
+    
+  if(millis() > last_pulse + 10000) {
+    media_pump->setState(1);
+    last_pulse = millis();
+  }
+  else if(millis() > last_pulse + 5000)
+    media_pump->setState(0);
 }
 
 // Run whenever serial data is available to be read
@@ -64,7 +76,7 @@ void serialEvent() {
         }
         case BCommunication::SetMotorState: {
           waitForSerialData(500);
-          motor->setState(Serial.read());
+          air_pump->setState(Serial.read());
           Serial.read();
           break;
         }
@@ -76,7 +88,7 @@ void serialEvent() {
             waitForSerialData(500);
           }
           Serial.read();
-          motor->setPulseWidth(*(reinterpret_cast<int *>(buffer)));
+          air_pump->setPulseWidth(*(reinterpret_cast<int *>(buffer)));
           break;
         }
       }

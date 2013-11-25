@@ -2,15 +2,11 @@
 #define	SOLENOID_H
 
 #include "Arduino.h"
+#include "AnalogOutputDevice.h"
 
-class Solenoid {
+class Solenoid : public AnalogOutputDevice {
 public:
     Solenoid(int pin);
-    void setState(bool on);
-    bool getState();
-private:
-    int pin_;
-    bool state_;
 };
 
 #endif	/* SOLENOID_H */

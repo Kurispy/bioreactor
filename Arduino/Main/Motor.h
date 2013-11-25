@@ -2,17 +2,11 @@
 #define	MOTOR_H
 
 #include "Arduino.h"
+#include "AnalogOutputDevice.h"
 
-class Motor {
+class Motor : public AnalogOutputDevice {
 public:
     Motor(int pin);
-    void setState(bool on);
-    bool getState();
-    void setPulseWidth(int pulse_width);
-private:
-    int pin_;
-    bool state_;
-    int pulse_width_;
 };
 
 #endif	/* MOTOR_H */
