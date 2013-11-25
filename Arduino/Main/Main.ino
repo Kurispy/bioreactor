@@ -14,13 +14,14 @@ float desired_temperature = 25.0;
 char buffer[8];
 int k = 0, i = 0;
 float ph = 0;
-unsigned long last_pulse = 0;
 
 void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
   analogReadResolution(12);
   media_pump->setPulseWidth(255);
+  media_pump->setPulseInterval(10000);
+  media_pump->setPulseDuration(5000);
   air_pump->setPulseWidth(255);
   air_pump->setState(1);
 }
@@ -32,13 +33,14 @@ void loop() {
     thermres->setState(1);
   else
     thermres->setState(0);
-    
-  if(millis() > last_pulse + 10000) {
+     
+  if(media_pump->getTimeSinceLastPulse() > media_pump->getPulseInterval()) {
     media_pump->setState(1);
-    last_pulse = millis();
+    media_pump->setLastPulse(millis());
   }
-  else if(millis() > last_pulse + 5000)
+  else if(media_pump->getTimeSinceLastPulse() > media_pump->getPulseDuration()) {
     media_pump->setState(0);
+  }
 }
 
 // Run whenever serial data is available to be read
